@@ -35,21 +35,40 @@ if not BOT_TOKEN:
     logger.critical("TELEGRAM_BOT_TOKEN is not set in environment variables.")
     raise ValueError("TELEGRAM_BOT_TOKEN must be set.")
 
-CURRENCY_SYMBOL = os.getenv("CURRENCY_SYMBOL", "₹")
-UPI_ID = os.getenv("UPI_ID", "your-upi-id@upi")
-PAYEE_NAME = os.getenv("PAYEE_NAME", "PDF Calculator Bot")
+CURRENCY_SYMBOL = os.getenv("CURRENCY_SYMBOL")
+if not CURRENCY_SYMBOL:
+    logger.critical("CURRENCY_SYMBOL is not set in environment variables.")
+    raise ValueError("CURRENCY_SYMBOL must be set.")
 
-try:
-    PRICE_PER_PAGE_BW = float(os.getenv("PRICE_PER_PAGE_BW", os.getenv("PRICE_PER_PAGE", "2.00")))
-except (ValueError, TypeError):
-    logger.warning("Invalid PRICE_PER_PAGE_BW config. Defaulting to 2.00.")
-    PRICE_PER_PAGE_BW = 2.00
+UPI_ID = os.getenv("UPI_ID")
+if not UPI_ID:
+    logger.critical("UPI_ID is not set in environment variables.")
+    raise ValueError("UPI_ID must be set.")
 
+PAYEE_NAME = os.getenv("PAYEE_NAME")
+if not PAYEE_NAME:
+    logger.critical("PAYEE_NAME is not set in environment variables.")
+    raise ValueError("PAYEE_NAME must be set.")
+
+price_bw_env = os.getenv("PRICE_PER_PAGE_BW", os.getenv("PRICE_PER_PAGE"))
+if not price_bw_env:
+    logger.critical("PRICE_PER_PAGE_BW (or PRICE_PER_PAGE) is not set in environment variables.")
+    raise ValueError("PRICE_PER_PAGE_BW must be set.")
 try:
-    PRICE_PER_PAGE_COLOR = float(os.getenv("PRICE_PER_PAGE_COLOR", "10.00"))
-except (ValueError, TypeError):
-    logger.warning("Invalid PRICE_PER_PAGE_COLOR config. Defaulting to 10.00.")
-    PRICE_PER_PAGE_COLOR = 10.00
+    PRICE_PER_PAGE_BW = float(price_bw_env)
+except ValueError:
+    logger.critical("PRICE_PER_PAGE_BW must be a valid float.")
+    raise ValueError("PRICE_PER_PAGE_BW must be a valid float.")
+
+price_color_env = os.getenv("PRICE_PER_PAGE_COLOR")
+if not price_color_env:
+    logger.critical("PRICE_PER_PAGE_COLOR is not set in environment variables.")
+    raise ValueError("PRICE_PER_PAGE_COLOR must be set.")
+try:
+    PRICE_PER_PAGE_COLOR = float(price_color_env)
+except ValueError:
+    logger.critical("PRICE_PER_PAGE_COLOR must be a valid float.")
+    raise ValueError("PRICE_PER_PAGE_COLOR must be a valid float.")
 
 
 def parse_message_text(text: str) -> dict:

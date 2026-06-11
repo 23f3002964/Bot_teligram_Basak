@@ -1,64 +1,100 @@
-# PDF Page Counter & Price Calculator Telegram Bot
+# 🖨️ PDF Page Counter & Price Calculator Telegram Bot
 
-A Python-based Telegram bot that allows users to upload PDF documents, automatically counts the number of pages in the PDF, and calculates a total price based on a configurable rate per page.
-
-## Features
-
-- **Document PDF Check**: Recognizes uploaded files ending with `.pdf` or with the correct MIME type.
-- **Page Counting**: Uses the lightweight `pypdf` library to read PDF headers and count pages.
-- **Configurable Pricing**: Rates and currency symbols can be configured via environment variables.
-- **Automatic Clean Up**: Downloaded PDFs are processed and deleted immediately from disk to ensure privacy and efficiency.
-- **Async Execution**: Built on `python-telegram-bot` v20+ with async/await handlers.
+A Python-based Telegram bot that allows users to upload PDF documents, automatically calculates page counts using the lightweight `pypdf` library, computes black-and-white vs. colour print costs, and generates UPI payment deep-links for seamless checkout.
 
 ---
 
-## Installation & Setup
+## 🚀 Features
+
+- **Automated PDF Parsing**: Detects and parses incoming `.pdf` attachments securely.
+- **Dynamic Pricing**: Custom rates for both Black & White and Colour prints configured via env variables.
+- **Interactive UI**: Standard Telegram inline keyboard buttons to change options and confirm payments.
+- **UPI Deep-Linking**: Generates a functional UPI QR/payment URL for instant mobile checkout in India (BHIM, Google Pay, PhonePe, Paytm, etc.).
+- **Automatic Cleanup**: Downloaded PDFs are processed, and immediately deleted from the server to guarantee privacy and save disk space.
+- **Robust Error Handling**: Rigid checks for missing, corrupt, or encrypted PDF files, as well as configuration verification.
+- **Fully Async**: Powered by `python-telegram-bot` v20+ with async/await.
+
+---
+
+## 🛠️ Project Structure
+
+```text
+bot/
+├── bot.py             # Main application and handler logic
+├── test_handler.py    # Mock test suite for verifying flow
+├── requirements.txt   # Python dependency manifest
+├── .env.example       # Template for configuration environment variables
+└── README.md          # Project documentation
+```
+
+---
+
+## ⚙️ Installation & Setup
 
 ### 1. Prerequisites
-- Python 3.8 or higher
-- A Telegram bot token (Create one using [@BotFather](https://t.me/BotFather) on Telegram)
+- **Python 3.8+**
+- A **Telegram Bot Token** (obtainable from [@BotFather](https://t.me/BotFather) on Telegram)
+- A **UPI ID** (if configuring the payment functionality, e.g., `yourname@upi`)
 
-### 2. Clone/Prepare Workspace
-Ensure all project files are in place:
-```bash
-bot/
-├── bot.py
-├── requirements.txt
-├── .env.example
-└── README.md
-```
+### 2. Set Up a Virtual Environment (Recommended)
+Isolate dependencies using `venv`:
 
-### 3. Create a Virtual Environment (Recommended)
-Set up a Python virtual environment and activate it:
 ```bash
 # On Linux/macOS
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
+
+# On Windows
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
-### 4. Install Dependencies
-Install the required packages:
+### 3. Install Dependencies
+Install all required libraries:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configuration
-Copy the sample environment file to `.env`:
+### 4. Configure Environment Variables
+Copy `.env.example` to create a local `.env` configuration file:
+
 ```bash
 cp .env.example .env
 ```
-Open `.env` and fill in your details:
-- `TELEGRAM_BOT_TOKEN`: The API key you received from @BotFather.
-- `PRICE_PER_PAGE`: The cost per page (e.g., `1.50`, `0.10`).
-- `CURRENCY_SYMBOL`: The currency sign to show in the bot responses (e.g., `$`, `₹`, `€`).
+
+Open `.env` and fill out your details:
+
+| Variable Name | Description | Example Value | Required? |
+| :--- | :--- | :--- | :--- |
+| `TELEGRAM_BOT_TOKEN` | The unique API token obtained from `@BotFather`. | `5922324299:AAExCo...` | **Yes** |
+| `CURRENCY_SYMBOL` | The currency symbol to display to the user (e.g. `$`, `₹`, `€`). | `₹` | **Yes** |
+| `UPI_ID` | The UPI ID to receive payments. | `payee@upi` | **Yes** |
+| `PAYEE_NAME` | The name associated with the UPI payee. | `PDF Calculator Bot` | **Yes** |
+| `PRICE_PER_PAGE_BW` | Cost per page for a Black & White printout. | `2.00` | **Yes** |
+| `PRICE_PER_PAGE_COLOR` | Cost per page for a Colour printout. | `10.00` | **Yes** |
+
+> [!WARNING]
+> Do not commit the `.env` file to your source control. The `.gitignore` file is pre-configured to keep it safe.
 
 ---
 
-## Running the Bot
+## 🏃 Running the Bot
 
-Run the bot script:
+Run the main bot script:
+
 ```bash
 python bot.py
 ```
 
-Open Telegram, search for your bot, click **Start**, and send any PDF file to test the count and price calculation!
+Open Telegram, search for your bot, send `/start`, and upload a PDF to test the pricing and UPI payment generation flow.
+
+---
+
+## 🧪 Testing
+
+The codebase includes an offline mock test suite to verify handlers without calling external APIs:
+
+```bash
+python test_handler.py
+```
