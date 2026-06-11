@@ -30,7 +30,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Retrieve configuration details
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "5922324299:AAExCoiqMuDNyx0MNl1TM4i0R9tLOBDjwis")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+if not BOT_TOKEN:
+    logger.critical("TELEGRAM_BOT_TOKEN is not set in environment variables.")
+    raise ValueError("TELEGRAM_BOT_TOKEN must be set.")
+
 CURRENCY_SYMBOL = os.getenv("CURRENCY_SYMBOL", "₹")
 UPI_ID = os.getenv("UPI_ID", "your-upi-id@upi")
 PAYEE_NAME = os.getenv("PAYEE_NAME", "PDF Calculator Bot")
